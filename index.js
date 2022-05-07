@@ -22,18 +22,19 @@ const findWindowIncreasesInDepth = (depthReadings) => {
     //Avoid executing the whole code, if there aren't sufficient amount of readings
     if (depthReadings.length < 4) return 0;
 
-    let increasesInDepth = 0;
+    const windowDepthTotals = [];
 
-    for (let i = 0; i < depthReadings.length; i++) {
-        const firstDataBatch = depthReadings.slice(i, i + 3);
-        const secondDataBatch = depthReadings.slice(i + 1, i + 4);
+    depthReadings.forEach((val, i) => {
+        const depthBatchWindow = depthReadings.slice(i, i + 3);
+        //Avoid pushing batches smaller than 3
+        if (depthBatchWindow.length < 3) return;
 
-        const firstBatchSum = findTotal(firstDataBatch);
-        const secondBatchSum = findTotal(secondDataBatch);
+        const batchTotal = findTotal(depthBatchWindow);
 
-        if (firstBatchSum < secondBatchSum) increasesInDepth++;
-    }
-    return increasesInDepth;
+        windowDepthTotals.push(batchTotal);
+    });
+
+    return findNoIncreasesInDepth(windowDepthTotals);
 };
 
 module.exports = { findNoIncreasesInDepth, findWindowIncreasesInDepth };
